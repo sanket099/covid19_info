@@ -4,9 +4,12 @@ import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
 import org.json.JSONArray;
@@ -25,6 +28,7 @@ import retrofit2.Response;
 
 public class specific extends AppCompatActivity {
     TextView date, country, case_number, status;
+    Button show_map;
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @Override
@@ -36,6 +40,7 @@ public class specific extends AppCompatActivity {
         country = findViewById(R.id.country);
         case_number = findViewById(R.id.case_number);
         status = findViewById(R.id.status);
+        show_map = findViewById(R.id.show_map);
 
         final int flag = Objects.requireNonNull(getIntent().getExtras()).getInt("flag");
         if(flag == 1){
@@ -66,7 +71,7 @@ public class specific extends AppCompatActivity {
 
                 }
                 System.out.println("succ");
-                List<specific_case> list1 = response.body();
+                final List<specific_case> list1 = response.body();
                 assert list1 != null;
                 System.out.println("succ " + list1);
                 Collections.reverse(list1);
@@ -76,6 +81,19 @@ public class specific extends AppCompatActivity {
                 case_number.setText(list1.get(0).getCases());
                 status.setText(list1.get(0).getStatus());
                 System.out.println("ok "+list1.get(0).getCountry());
+                final Double lat = list1.get(0).getLat();
+                final Double longi = list1.get(0).getLongi();
+                show_map.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent(specific.this,com.example.covid.MapsActivity.class);
+                        intent.putExtra("lat",lat);
+                        intent.putExtra("longi",longi);
+                        intent.putExtra("country",country.getText().toString());
+                        intent.putExtra("cases",case_number.getText().toString());
+                        startActivity(intent);
+                    }
+                });
                 //JSONObject dataobj = list1.get(0);
             }
 
@@ -114,6 +132,20 @@ public class specific extends AppCompatActivity {
                 case_number.setText(list1.get(0).getCases());
                 status.setText(list1.get(0).getStatus());
                 System.out.println("ok "+list1.get(0).getCountry());
+                final Double lat = list1.get(0).getLat();
+                final Double longi = list1.get(0).getLongi();
+                show_map.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent(specific.this,com.example.covid.MapsActivity.class);
+                        intent.putExtra("lat",lat);
+                        intent.putExtra("longi",longi);
+                        intent.putExtra("country",country.getText().toString());
+                        intent.putExtra("cases",case_number.getText().toString());
+                        startActivity(intent);
+                    }
+                });
+
                 //JSONObject dataobj = list1.get(0);
             }
 
